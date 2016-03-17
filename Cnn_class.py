@@ -1,7 +1,4 @@
 """
-Sample code for
-Convolutional Neural Networks for Sentence Classification
-http://arxiv.org/pdf/1408.5882v2.pdf
 
 Much of the code is modified from
 - deeplearning.net (for ConvNet classes)
