@@ -1,64 +1,10 @@
 # CNN-Sentence
 Unsupervised learning of language understanding by sentence composition from words vector.
--Project to extract chemical synthesis graphs from academic papers, MIT 6.864 Fall 2015.
-+Project to extract chemical synthesis graphs from academic papers, MIT
-+6.864 Fall 2015.
-+
-+Running the Code
-+================
-+
-+Running this code, in general, requires Theano, Keras, pymongo, h5py, and
-+a number of other packages. I can only speak about my own code... - Quan
-+
-+First, you need to download and setup the chemnet database, which requires
-+Mongo. After that's installed, run the mongo server daemon by doing:
-+
-+	$ mongod &
-+
-+Then, create the dataset by running:
-+
-+	$ ./create_datasets 1 100000
-+
-+This will create a file called `train_reactions_with_outputs_100000.json`,
-+which contains 50,000 real reactions (with their outputs), and 50,000 fake
-+reactions (with "null" as the output). (The code has been since modified
-+to produce the output, users will need to convert the code so that it
-+outputs true/false for reactions in order to perform the classification
-+task. For your convenience, I have included )
-+
-+Assuming that the user has a file called `train_reactions_100000.json`,
-+which contains [chemical A, chemical B, true/false] tuples, run the naive
-+Bayes classifier to obtain performance:
-+
-+	$ ./naive.py train_reactions_100000.json
-+
-+To run the neural network model:
-+
-+	$ mkdir performance
-+	$ ./neural.py train_reactions_100000.json
-+
-+This code creates a model that trains its own embeddings (and dumps them
-+to a file called `embeddings_neural.p`, which is a dictionary that
-+contains chemical name token to 100-dimensional embeddings). It also
-+writes performance numbers to `performance/data_neural.tsv`.
-+
-+To run the neural network with fixed embeddings, first run the
-+autoencoder:
-+
-+	$ ./autoencoder_3.py train_reactions_100000.json
-+
-+This creates a file called `embeddings_neural.p` as well, which is then
-+fed to the neural network:
-+
-+	$ mkdir performance
-+	$ ./neural_with_embeddings train_reactions_100000.json embeddings_neural.p
-+
-+It also places performance numbers in `performance/data.tsv`.
-+
-+Dropbox Code
-+============
-+
-+Much of the group work was done on Dropbox. The MIT Dropbox link (only
-+viewable by those at MIT) is:
-+
-+https://www.dropbox.com/sh/ls5d6jg0muuftzn/AACZlm8RIBlDIicvSQX7ybSka?dl=0
+
+The purpose of this model is using CNN to do language understanding by classify sentences into different topics. 
+
+The model has 3 training steps (we are only showing the code of step 2 and 3 here). 
+1. Train word vector and phrase vector using skip gram method using large corpus. For the phases with high frenquences, it is connected by hyphen and through back into corpus (e.g big apple will become big_apple). The connected phrase will be treated as single world and will be predited using its context. This step will result vector for single words as well as phrases. e.g. vec('new_york'),vec('new'). The vectors are pretrained and are read using inputdata_process.py
+2. Trainig of CNN network. The training is based on phrase and their tokenized words. E.g. for the training based on a_big_apple, the input will be [vec('a'),vec('big'),vec('apple')] and the output will be vec('a_big_apple'). The input is padded with zero to the designed CNN input dimension and then feed into the CNN network. Muti filter, max pooling and dropout are used to train the CNN. The cossentropy of output and vec('a_big_apple') are calculated as the loss. 
+We hope the model can learn how to compose sentences by observing how to compose phrases, which can come from difference part of the sentence. 
+3. Traaing of sentence classifier. We use the CNN trained above to get a vector representation of a sentence. Then we train a classifer on top of it to classify sentence topics. 
