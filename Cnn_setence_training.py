@@ -47,7 +47,6 @@ def train_conv_net(datasets,
     img_w = word vector length (300 for word2vec)
     filter_hs = filter window sizes    
     hidden_units = [x,y] x is the number of feature maps (per filter window), and y is the penultimate layer
-    sqr_norm_lim = s^2 in the paper
     lr_decay = adadelta decay parameter
     """    
     rng = np.random.RandomState(3435)
